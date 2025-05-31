@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: body(~{::div.content})}">
+    <body>
+        <div class="content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Detalles de la Expedición</h1>
+                <div>
+                    <a th:href="@{/expeditions/edit/{id}(id=${expedition.id})}" class="btn btn-warning">Editar</a>
+                    <a th:href="@{/expeditions/status/{id}(id=${expedition.id})}" class="btn btn-primary">Cambiar Estado</a>
+                    <a href="/expeditions" class="btn btn-secondary">Volver</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Información General</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">ID:</div>
+                                <div class="col-md-8" th:text="${expedition.id}"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Nombre de Misión:</div>
+                                <div class="col-md-8" th:text="${expedition.nombreMision}"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Planeta Destino:</div>
+                                <div class="col-md-8">
+                                    <a th:href="@{/planets/view/{id}(id=${expedition.planetaDestino.id})}"
+                                       th:text="${expedition.planetaDestino.nombre}"></a>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Fecha de Lanzamiento:</div>
+                                <div class="col-md-8" th:text="${#temporals.format(expedition.fechaLanzamiento, 'dd-MM-yyyy HH:mm')}"></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 fw-bold">Estado:</div>
+                                <div class="col-md-8">
+                                <span th:class="${expedition.estado == 'Planificada' ? 'badge bg-info' :
+                                                (expedition.estado == 'En Curso' ? 'badge bg-warning' :
+                                                (expedition.estado == 'Completada' ? 'badge bg-success' : 'badge bg-danger'))}"
+                                      th:text="${expedition.estado}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Detalles de la Misión</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="fw-bold">Objetivos:</h6>
+                                <p th:text="${expedition.objetivos}" th:if="${expedition.objetivos != null && !expedition.objetivos.isEmpty()}"></p>
+                                <p class="text-muted" th:if="${expedition.objetivos == null || expedition.objetivos.isEmpty()}">No se han definido objetivos.</p>
+                            </div>
+
+                            <div>
+                                <h6 class="fw-bold">Resultados:</h6>
+                                <p th:text="${expedition.resultados}" th:if="${expedition.resultados != null && !expedition.resultados.isEmpty()}"></p>
+                                <p class="text-muted" th:if="${expedition.resultados == null || expedition.resultados.isEmpty()}">
+                                    No hay resultados disponibles.
+                                    <span th:if="${expedition.estado != 'Completada'}">Los resultados estarán disponibles cuando la expedición se complete.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Tripulación</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li th:each="crew : ${expedition.crewMembers}" class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <a th:href="@{/crew/view/{id}(id=${crew.id})}" th:text="${crew.nombreCompleto}"></a>
+                                            <div>
+                                                <span class="badge bg-secondary" th:text="${crew.especialidad}"></span>
+                                                <span class="badge bg-info" th:text="${crew.rango}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li th:if="${expedition.crewMembers.isEmpty()}" class="list-group-item text-center text-muted">
+                                    No hay miembros asignados a esta expedición.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
