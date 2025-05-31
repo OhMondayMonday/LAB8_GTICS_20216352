@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lista de Miembros de la Tripulación</title>
+    </head>
+    <body>
+        <h1>Lista de Miembros de la Tripulación</h1>
+        <a href="/crewmembers/new">Crear Nuevo</a>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Completo</th>
+                    <th>Especialidad</th>
+                    <th>Rango</th>
+                    <th>Fecha de Contratación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se mostrará la lista de miembros -->
+                <tr th:each="member : ${crewmembers}">
+                    <td th:text="${member.id}"></td>
+                    <td th:text="${member.nombreCompleto}"></td>
+                    <td th:text="${member.especialidad}"></td>
+                    <td th:text="${member.rango}"></td>
+                    <td th:text="${member.fechaContratacion}"></td>
+                    <td>
+                        <a th:href="@{/crewmembers/edit/{id}(id=${member.id})}">Editar</a>
+                        <a th:href="@{/crewmembers/delete/{id}(id=${crewmember.id})}">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

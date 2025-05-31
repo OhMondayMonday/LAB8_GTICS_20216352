@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: body(~{::div.content})}">
+    <body>
+        <div class="content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Expediciones</h1>
+                <a href="/expeditions/new" class="btn btn-primary">Nueva Expedición</a>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre Misión</th>
+                                <th>Planeta Destino</th>
+                                <th>Fecha Lanzamiento</th>
+                                <th>Estado</th>
+                                <th>Tripulación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="expedition : ${expeditions}">
+                                <td th:text="${expedition.id}"></td>
+                                <td th:text="${expedition.nombreMision}"></td>
+                                <td th:text="${expedition.planetaDestino.nombre}"></td>
+                                <td th:text="${#temporals.format(expedition.fechaLanzamiento, 'dd-MM-yyyy HH:mm')}"></td>
+                                <td>
+                                <span th:class="${expedition.estado == 'Planificada' ? 'badge bg-info' :
+                                                (expedition.estado == 'En Curso' ? 'badge bg-warning' :
+                                                (expedition.estado == 'Completada' ? 'badge bg-success' : 'badge bg-danger'))}"
+                                      th:text="${expedition.estado}"></span>
+                                </td>
+                                <td th:text="${expedition.crewMembers.size()}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a th:href="@{/expeditions/view/{id}(id=${expedition.id})}" class="btn btn-sm btn-info">Ver</a>
+                                        <a th:href="@{/expeditions/edit/{id}(id=${expedition.id})}" class="btn btn-sm btn-warning">Editar</a>
+                                        <a th:href="@{/expeditions/status/{id}(id=${expedition.id})}" class="btn btn-sm btn-primary">Estado</a>
+                                        <a th:href="@{/expeditions/delete/{id}(id=${expedition.id})}"
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('¿Estás seguro de eliminar esta expedición?')">Eliminar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${expeditions.isEmpty()}">
+                                <td colspan="7" class="text-center">No hay expediciones registradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
